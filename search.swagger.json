@@ -1,0 +1,366 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "operations support system: search service",
+    "version": "v1.0.0"
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/resources/_search": {
+      "post": {
+        "operationId": "SearchResources",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/searchSearchResourceResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/searchSearchResourceRequest"
+            }
+          }
+        ],
+        "tags": [
+          "SearchService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "FieldOperatorType": {
+      "type": "string",
+      "enum": [
+        "OPERATOR_TYPE_EQ",
+        "OPERATOR_TYPE_NE",
+        "OPERATOR_TYPE_LT",
+        "OPERATOR_TYPE_LTE",
+        "OPERATOR_TYPE_GT",
+        "OPERATOR_TYPE_GTE",
+        "OPERATOR_TYPE_EXISTS",
+        "OPERATOR_TYPE_IN",
+        "OPERATOR_TYPE_TEXT_SEARCH"
+      ],
+      "default": "OPERATOR_TYPE_EQ"
+    },
+    "ResourceAttribute": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "ResourceRelation": {
+      "type": "string",
+      "enum": [
+        "RELATION_UNLIMIT",
+        "RELATION_IN",
+        "RELATION_OWN",
+        "RELATION_DEPEND_ON",
+        "RELATION_DEPENDED_ON",
+        "RELATION_DEPLOY_ON",
+        "RELATION_BUILD",
+        "RELATION_LINK_WITH"
+      ],
+      "default": "RELATION_UNLIMIT"
+    },
+    "ResourceRelationShip": {
+      "type": "object",
+      "properties": {
+        "relation": {
+          "$ref": "#/definitions/ResourceRelation"
+        },
+        "related_obj_type": {
+          "$ref": "#/definitions/cmdbResourceType"
+        },
+        "related_obj_name": {
+          "type": "string"
+        },
+        "deploy_on_usage": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/cmdbUsage"
+          },
+          "title": "业务资源依赖的虚拟资源的各种资源占用量, 不填的话，各种资源全部占用\nkey 为 WaterLevelType 的string\nkey 为GPU时，Usage中的key从ATTRIBUTE_KEY_GPU tag中获取\nkey 为CPU时，Usage中的key为enum CpuType的string"
+        }
+      }
+    },
+    "ResourceUsed": {
+      "type": "string",
+      "enum": [
+        "USED_UNLIMIT",
+        "USED_SPARE",
+        "USED_IN_USE"
+      ],
+      "default": "USED_UNLIMIT"
+    },
+    "cmdbFloatArray": {
+      "type": "object",
+      "properties": {
+        "array": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "float"
+          }
+        }
+      }
+    },
+    "cmdbIntegerArray": {
+      "type": "object",
+      "properties": {
+        "array": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "int64"
+          }
+        }
+      }
+    },
+    "cmdbResource": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/cmdbResourceType"
+        },
+        "nick_name": {
+          "type": "string"
+        },
+        "attributes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResourceAttribute"
+          }
+        },
+        "relations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResourceRelationShip"
+          }
+        },
+        "status": {
+          "$ref": "#/definitions/cmdbResourceStatus"
+        },
+        "description": {
+          "type": "string"
+        },
+        "used": {
+          "$ref": "#/definitions/ResourceUsed"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "title": "资源统一定义"
+    },
+    "cmdbResourceStatus": {
+      "type": "string",
+      "enum": [
+        "STATUS_UNLIMIT",
+        "STATUS_PENDING",
+        "STATUS_OK",
+        "STATUS_MAINTAIN",
+        "STATUS_IMPAIRED"
+      ],
+      "default": "STATUS_UNLIMIT"
+    },
+    "cmdbResourceType": {
+      "type": "string",
+      "enum": [
+        "TYPE_UNLIMIT",
+        "TYPE_HOST",
+        "TYPE_VIRTUAL",
+        "TYPE_SERVICE",
+        "TYPE_PRODUCT"
+      ],
+      "default": "TYPE_UNLIMIT"
+    },
+    "cmdbStringArray": {
+      "type": "object",
+      "properties": {
+        "array": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "cmdbUsage": {
+      "type": "object",
+      "properties": {
+        "usage": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": "例如{\"P4\": 10}或者{\"CPU_TYPE_CPU\": 10}"
+        }
+      }
+    },
+    "keystoneosscommonPageMarker": {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "type": "integer",
+          "format": "int32",
+          "description": "分页大小.\n[EN] Page size, range [10, 100]."
+        },
+        "marker": {
+          "type": "string",
+          "description": "分页标志, 第一页传空. 默认为空.\n[EN] Page marker, first page is empty. Empty by default."
+        },
+        "total": {
+          "type": "integer",
+          "format": "int32",
+          "description": "可选, 总数, 请求无须填此参数, 响应时填写.\n[EN] Optional, this parameter is not required for request, but will be\nfilled in response."
+        }
+      }
+    },
+    "searchField": {
+      "type": "object",
+      "properties": {
+        "op_type": {
+          "$ref": "#/definitions/FieldOperatorType",
+          "description": "过滤条件类型.\n[EN] Filtering criteria type."
+        },
+        "field": {
+          "type": "string",
+          "description": "属性名称.\n[EN] Attribute name."
+        },
+        "string_value": {
+          "type": "string",
+          "title": "字符值, 对字符串或枚举类型\n[EN] String value, set for string or enum field"
+        },
+        "integer_value": {
+          "type": "string",
+          "format": "int64",
+          "description": "整数, 对于枚举类型,如果未设置string_value则使用此值.\n[EN] Integer value, for enum type field, if string_value unset, it will\nbe used."
+        },
+        "float_value": {
+          "type": "number",
+          "format": "float",
+          "description": "浮点数.\n[EN] Float value."
+        },
+        "bool_value": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": "布尔值.\n[EN] Boolean value."
+        },
+        "string_array": {
+          "$ref": "#/definitions/cmdbStringArray",
+          "description": "一组字符值, 在type=OPERATOR_TYPE_IN且待过滤属性为字符串或枚举类型时使用.\n[EN] A set of character values used when type=OPERATOR_TYPE_IN and the\nfield is a string or an enum."
+        },
+        "integer_array": {
+          "$ref": "#/definitions/cmdbIntegerArray",
+          "description": "一组整数, 在type=OPERATOR_TYPE_IN且待过滤属性为整型时使用,\n对于枚举类型,如果未设置string_array则使用此值.\n[EN] A set of integers used when type=OPERATOR_TYPE_IN and the field is\nan integer, for enum type field, if string_array unset, it will be used."
+        },
+        "float_array": {
+          "$ref": "#/definitions/cmdbFloatArray",
+          "description": "一组浮点数, 在type=OPERATOR_TYPE_IN且待过滤属性为浮点型时使用.\n[EN] A set of floating point numbers used when type=OPERATOR_TYPE_IN and\nthe field is a float."
+        }
+      }
+    },
+    "searchFilter": {
+      "type": "object",
+      "properties": {
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/searchField"
+          },
+          "title": "可选，每一个过滤参数的字段集合\n这些字段应该是有关联的，如果是数组，这一组字段都应该用来指定某一个数组元素的过滤"
+        }
+      }
+    },
+    "searchSearchResourceRequest": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "integer",
+          "format": "int32",
+          "title": "可选，资源类型， resource.Type 枚举类型的数值，可叠加"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "title": "可选，资源状态，resource.Status 枚举类型的数值，可叠加"
+        },
+        "used": {
+          "type": "integer",
+          "format": "int32",
+          "title": "可选，资源使用状态，resource.Used 枚举类型的数值，可叠加"
+        },
+        "name": {
+          "type": "string",
+          "title": "可选，资源名称"
+        },
+        "filters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/searchFilter"
+          },
+          "title": "可选，过滤参数"
+        },
+        "track_total_hits": {
+          "type": "boolean",
+          "format": "boolean",
+          "title": "可选，是否返回命中总数，默认false"
+        },
+        "page": {
+          "$ref": "#/definitions/keystoneosscommonPageMarker",
+          "title": "list请求对应的翻页：marker, limit"
+        }
+      }
+    },
+    "searchSearchResourceResponse": {
+      "type": "object",
+      "properties": {
+        "resource_list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/cmdbResource"
+          },
+          "title": "返回的订单列表"
+        },
+        "page": {
+          "$ref": "#/definitions/keystoneosscommonPageMarker",
+          "title": "list返回对应的翻页：marker, total"
+        }
+      }
+    }
+  }
+}
