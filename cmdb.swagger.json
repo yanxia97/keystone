@@ -1,0 +1,1624 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "operations support system: cmdb service",
+    "version": "v1.0.0"
+  },
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/resources": {
+      "post": {
+        "operationId": "NewResources",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/cmdbNewResourceResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/cmdbNewResourceRequest"
+            }
+          }
+        ],
+        "tags": [
+          "CMDBService"
+        ]
+      }
+    },
+    "/v1/resources/_list": {
+      "post": {
+        "operationId": "ListResources",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/cmdbListResourceResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/cmdbListResourceRequest"
+            }
+          }
+        ],
+        "tags": [
+          "CMDBService"
+        ]
+      }
+    },
+    "/v1/resources/attributes/new": {
+      "get": {
+        "operationId": "GetNewResourceAttributeParams",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/cmdbGetNewResourceAttributeParamsResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "TYPE_UNLIMIT",
+              "TYPE_HOST",
+              "TYPE_VIRTUAL",
+              "TYPE_SERVICE",
+              "TYPE_PRODUCT"
+            ],
+            "default": "TYPE_UNLIMIT"
+          },
+          {
+            "name": "machine_type",
+            "description": "仅用来创建物理资源类型时需要填写具体的业务资源类型\n数据从ATTRIBUTE_KEY_MACHINE_TYPE tag 接口获取.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "product_type",
+            "description": "仅用来创建商品资源类型时需要填写具体的商品资源类型\n数据从ATTRIBUTE_KEY_PRODUCT_TYPE tag 接口获取.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "CMDBService"
+        ]
+      }
+    },
+    "/v1/resources/deploy": {
+      "post": {
+        "operationId": "DeployResource",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/cmdbDeployResourceResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/cmdbDeployResourceRequest"
+            }
+          }
+        ],
+        "tags": [
+          "CMDBService"
+        ]
+      }
+    },
+    "/v1/resources/deploy/retry": {
+      "post": {
+        "operationId": "RetryDeployResource",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/cmdbRetryDeployResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/cmdbRetryDeployRequest"
+            }
+          }
+        ],
+        "tags": [
+          "CMDBService"
+        ]
+      }
+    },
+    "/v1/resources/deploy/status/batch": {
+      "get": {
+        "operationId": "BatchGetDeployStatus",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/cmdbBatchGetDeployStatusResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "request_ids",
+            "description": "请求的id列表.",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page_request.offset",
+            "description": "可选, 开始位置, 取值:\u003e=0, 0为第一条; 默认值为0.\n返回本次请求返回的第一条记录实际位置(一般与输入一致).\n[EN] Optional, start position, value: \u003e = 0, 0 is the first line; the\ndefault value is 0. In response, actual offset of the first returned record\nis returned (generally equals to the offset in request).",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "page_request.limit",
+            "description": "长度, 取值范围[1,100], 如果超出范围, 则返回失败;\n在某些接口中limit范围可能会重新定义, 请以其接口的补充说明为准. [EN] Length,\ndefault value range [1,100], if it is out of the range, error will be\nreturned; as the limit range may be redefined in some APIs, please refer to\nthe supplementary description of these APIs.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "page_request.total",
+            "description": "可选, 总数, 请求无须填此参数, 响应时填写.\n[EN] Optional, this parameter is not required for request, but will be\nfilled in response.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "CMDBService"
+        ]
+      }
+    },
+    "/v1/resources/name/{name}": {
+      "get": {
+        "operationId": "GetResourceByName",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/cmdbGetResourceResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "CMDBService"
+        ]
+      }
+    },
+    "/v1/resources/orders/waterlevels/lock": {
+      "post": {
+        "operationId": "OrderWaterLevelLock",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/cmdbOrderWaterLevelLockResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/cmdbOrderWaterLevelLockRequest"
+            }
+          }
+        ],
+        "tags": [
+          "CMDBService"
+        ]
+      }
+    },
+    "/v1/resources/product/consumers": {
+      "get": {
+        "operationId": "GetProductConsumers",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/cmdbGetProductConsumersResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "resource_id",
+            "description": "资源id，为0时，表示不限制关联资源.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "kss_id",
+            "description": "商品资源id，为0时，表示不限制, resource_id 和 kss_id 二者必需要填一个.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "product_level_type",
+            "description": "商品资源消耗的类型, 必填.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "ALLOCATED",
+              "PAID"
+            ],
+            "default": "ALLOCATED"
+          },
+          {
+            "name": "page_request.offset",
+            "description": "可选, 开始位置, 取值:\u003e=0, 0为第一条; 默认值为0.\n返回本次请求返回的第一条记录实际位置(一般与输入一致).\n[EN] Optional, start position, value: \u003e = 0, 0 is the first line; the\ndefault value is 0. In response, actual offset of the first returned record\nis returned (generally equals to the offset in request).",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "page_request.limit",
+            "description": "长度, 取值范围[1,100], 如果超出范围, 则返回失败;\n在某些接口中limit范围可能会重新定义, 请以其接口的补充说明为准. [EN] Length,\ndefault value range [1,100], if it is out of the range, error will be\nreturned; as the limit range may be redefined in some APIs, please refer to\nthe supplementary description of these APIs.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "page_request.total",
+            "description": "可选, 总数, 请求无须填此参数, 响应时填写.\n[EN] Optional, this parameter is not required for request, but will be\nfilled in response.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "CMDBService"
+        ]
+      }
+    },
+    "/v1/resources/product/crd/trigger": {
+      "post": {
+        "operationId": "TriggerProductCrd",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/cmdbTriggerProductCrdResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/cmdbTriggerProductCrdRequest"
+            }
+          }
+        ],
+        "tags": [
+          "CMDBService"
+        ]
+      }
+    },
+    "/v1/resources/product/scalablequota": {
+      "get": {
+        "operationId": "GetProductScalableQuota",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/cmdbGetProductScalableQuotaResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "product_name",
+            "description": "商品资源name，创建商品资源时要不传，更新商品资源时要传.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "product_type",
+            "description": "商品资源类型，必传.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "service_names",
+            "description": "商品资源所依赖的业务资源name，必传.",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "CMDBService"
+        ]
+      }
+    },
+    "/v1/resources/sqbs/waterlevels/lock": {
+      "post": {
+        "operationId": "SqbWaterLevelLock",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/cmdbSqbWaterLevelLockResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/cmdbSqbWaterLevelLockRequest"
+            }
+          }
+        ],
+        "tags": [
+          "CMDBService"
+        ]
+      }
+    },
+    "/v1/resources/status/stats": {
+      "get": {
+        "operationId": "StatsResource",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/cmdbResourceStatsResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "TYPE_UNLIMIT",
+              "TYPE_HOST",
+              "TYPE_VIRTUAL",
+              "TYPE_SERVICE",
+              "TYPE_PRODUCT"
+            ],
+            "default": "TYPE_UNLIMIT"
+          }
+        ],
+        "tags": [
+          "CMDBService"
+        ]
+      }
+    },
+    "/v1/resources/waterlevels": {
+      "post": {
+        "operationId": "GetWaterLevel",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/cmdbGetWaterLevelResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/cmdbGetWaterLevelRequest"
+            }
+          }
+        ],
+        "tags": [
+          "CMDBService"
+        ]
+      }
+    },
+    "/v1/resources/{id}": {
+      "get": {
+        "operationId": "GetResource",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/cmdbGetResourceResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "CMDBService"
+        ]
+      },
+      "delete": {
+        "operationId": "DeleteResource",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/cmdbDeleteResourceResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "CMDBService"
+        ]
+      },
+      "put": {
+        "operationId": "UpdateResource",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/cmdbUpdateResourceResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/cmdbUpdateResourceRequest"
+            }
+          }
+        ],
+        "tags": [
+          "CMDBService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "ResourceAttribute": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "ResourceRelation": {
+      "type": "string",
+      "enum": [
+        "RELATION_UNLIMIT",
+        "RELATION_IN",
+        "RELATION_OWN",
+        "RELATION_DEPEND_ON",
+        "RELATION_DEPENDED_ON",
+        "RELATION_DEPLOY_ON",
+        "RELATION_BUILD",
+        "RELATION_LINK_WITH"
+      ],
+      "default": "RELATION_UNLIMIT"
+    },
+    "ResourceRelationShip": {
+      "type": "object",
+      "properties": {
+        "relation": {
+          "$ref": "#/definitions/ResourceRelation"
+        },
+        "related_obj_type": {
+          "$ref": "#/definitions/cmdbResourceType"
+        },
+        "related_obj_name": {
+          "type": "string"
+        },
+        "deploy_on_usage": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/cmdbUsage"
+          },
+          "title": "业务资源依赖的虚拟资源的各种资源占用量, 不填的话，各种资源全部占用\nkey 为 WaterLevelType 的string\nkey 为GPU时，Usage中的key从ATTRIBUTE_KEY_GPU tag中获取\nkey 为CPU时，Usage中的key为enum CpuType的string"
+        }
+      }
+    },
+    "ResourceUsed": {
+      "type": "string",
+      "enum": [
+        "USED_UNLIMIT",
+        "USED_SPARE",
+        "USED_IN_USE"
+      ],
+      "default": "USED_UNLIMIT"
+    },
+    "ServiceItemTimerangeQuotaLeft": {
+      "type": "object",
+      "properties": {
+        "quota_left": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "start_time": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end_time": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "SqbLabelType": {
+      "type": "string",
+      "enum": [
+        "LABEL_TYPE_UNKNOWN",
+        "LABEL_TYPE_APP",
+        "LABEL_TYPE_PROJECT",
+        "LABEL_TYPE_ACCOUNT"
+      ],
+      "default": "LABEL_TYPE_UNKNOWN",
+      "description": "- LABEL_TYPE_UNKNOWN: 未知，占位用\n - LABEL_TYPE_APP: 作用在app上\n - LABEL_TYPE_PROJECT: 作用在project上\n - LABEL_TYPE_ACCOUNT: 作用在整个account上",
+      "title": "sqb 作用类型"
+    },
+    "TicketItemProperty": {
+      "type": "object",
+      "properties": {
+        "kss_item_instance_id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "服务实例的属性,比如db_id,object_type\n其他如class1，class2，以及规格等都放到properties里面"
+        }
+      }
+    },
+    "cmdbAttributeParam": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/cmdbAttributeParamType"
+        },
+        "string_array": {
+          "$ref": "#/definitions/cmdbStringArray"
+        },
+        "integer_array": {
+          "$ref": "#/definitions/cmdbIntegerArray"
+        },
+        "float_array": {
+          "$ref": "#/definitions/cmdbFloatArray"
+        },
+        "bool_array": {
+          "$ref": "#/definitions/cmdbBoolArray"
+        }
+      }
+    },
+    "cmdbAttributeParamType": {
+      "type": "string",
+      "enum": [
+        "INVALID",
+        "INTEGER",
+        "STRING",
+        "FLOAT",
+        "ENUM",
+        "BOOL",
+        "ENUMS"
+      ],
+      "default": "INVALID"
+    },
+    "cmdbBasicWaterLevelQuery": {
+      "type": "object",
+      "properties": {
+        "level_type": {
+          "$ref": "#/definitions/cmdbWaterLevelType"
+        }
+      }
+    },
+    "cmdbBatchGetDeployStatusResponse": {
+      "type": "object",
+      "properties": {
+        "page_response": {
+          "$ref": "#/definitions/keystoneosscommonListPage",
+          "title": "list返回对应的翻页：offset, total"
+        },
+        "status_list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/commoncmdbDeployStatus"
+          }
+        }
+      }
+    },
+    "cmdbBoolArray": {
+      "type": "object",
+      "properties": {
+        "array": {
+          "type": "array",
+          "items": {
+            "type": "boolean",
+            "format": "boolean"
+          }
+        }
+      }
+    },
+    "cmdbConsumerTimeRange": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64",
+          "title": "如果product_level_type是paid，这个id就是订单的id\n否则就是sqb的id"
+        },
+        "count": {
+          "type": "string",
+          "format": "uint64",
+          "title": "消费的数量"
+        },
+        "start_time": {
+          "type": "string",
+          "format": "date-time",
+          "title": "开始时间"
+        },
+        "end_time": {
+          "type": "string",
+          "format": "date-time",
+          "title": "结束时间"
+        }
+      }
+    },
+    "cmdbDeleteResourceResponse": {
+      "type": "object"
+    },
+    "cmdbDeployMode": {
+      "type": "string",
+      "enum": [
+        "DEPLOY_MODE_UNKNOWN",
+        "DEPLOY_MODE_NEW",
+        "DEPLOY_MODE_UPGRADE"
+      ],
+      "default": "DEPLOY_MODE_UNKNOWN"
+    },
+    "cmdbDeployResourceRequest": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/definitions/cmdbResourceType",
+          "title": "资源类型，目前只支持业务资源"
+        },
+        "resource_id": {
+          "type": "string",
+          "format": "uint64",
+          "title": "资源id"
+        },
+        "mode": {
+          "$ref": "#/definitions/cmdbDeployMode",
+          "title": "部署类型"
+        },
+        "values": {
+          "type": "string",
+          "title": "部署的参数, 填好值的yaml文件内容"
+        },
+        "request_id": {
+          "type": "string",
+          "title": "request id, 唯一, 不传的话，后端会自动创建一个唯一的值"
+        }
+      }
+    },
+    "cmdbDeployResourceResponse": {
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "type": "string",
+          "title": "如果请求里带有这个, 就返回请求的id\n如果请求里没有，就返回一个唯一id"
+        }
+      }
+    },
+    "cmdbFloatArray": {
+      "type": "object",
+      "properties": {
+        "array": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "float"
+          }
+        }
+      }
+    },
+    "cmdbGetNewResourceAttributeParamsResponse": {
+      "type": "object",
+      "properties": {
+        "attribute_params": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/cmdbAttributeParam"
+          }
+        }
+      }
+    },
+    "cmdbGetProductConsumersResponse": {
+      "type": "object",
+      "properties": {
+        "page_response": {
+          "$ref": "#/definitions/keystoneosscommonListPage",
+          "title": "list返回对应的翻页：offset, total"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/cmdbConsumerTimeRange"
+          },
+          "title": "如果product_level_type是paid，这个ids就是订单的id列表\n否则就是sqb的id列表"
+        }
+      }
+    },
+    "cmdbGetProductScalableQuotaResponse": {
+      "type": "object",
+      "properties": {
+        "scalable_quota": {
+          "type": "string",
+          "format": "int64",
+          "title": "商品资源可以扩展的quota，-1表示quota不受限制"
+        }
+      }
+    },
+    "cmdbGetResourceResponse": {
+      "type": "object",
+      "properties": {
+        "resource": {
+          "$ref": "#/definitions/cmdbResource"
+        }
+      }
+    },
+    "cmdbGetWaterLevelRequest": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/definitions/cmdbResourceType",
+          "title": "资源类型"
+        },
+        "product_query": {
+          "$ref": "#/definitions/cmdbProductWaterLevelQuery",
+          "title": "按已分配还是已购买分类, 只针对商品资源"
+        },
+        "service_query": {
+          "$ref": "#/definitions/cmdbServiceWaterLevelQuery",
+          "title": "按已gpu,cpu分类, 只针对业务资源"
+        },
+        "virtual_query": {
+          "$ref": "#/definitions/cmdbVirtualWaterLevelQuery",
+          "title": "按已gpu,cpu分类, 只针虚拟资源"
+        },
+        "basic_query": {
+          "$ref": "#/definitions/cmdbBasicWaterLevelQuery",
+          "title": "资源水位类型(商品资源(包含kss)不适用该参数)，"
+        },
+        "granularity": {
+          "$ref": "#/definitions/commonGranularity",
+          "title": "时间粒度，目前仅支持[天]"
+        },
+        "start_time": {
+          "type": "string",
+          "format": "date-time",
+          "title": "请求开始时间 x \u003e= start_time"
+        },
+        "end_time": {
+          "type": "string",
+          "format": "date-time",
+          "title": "请求结束时间 x \u003c= end_time"
+        }
+      }
+    },
+    "cmdbGetWaterLevelResponse": {
+      "type": "object",
+      "properties": {
+        "water_levels": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/cmdbWaterLevel"
+          }
+        }
+      }
+    },
+    "cmdbIntegerArray": {
+      "type": "object",
+      "properties": {
+        "array": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "int64"
+          }
+        }
+      }
+    },
+    "cmdbListResourceRequest": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "integer",
+          "format": "int32",
+          "title": "资源类型， resource.Type 枚举类型的数值，可叠加"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "title": "资源状态，resource.Status 枚举类型的数值，可叠加"
+        },
+        "used": {
+          "type": "integer",
+          "format": "int32",
+          "title": "资源使用状态，resource.Used 枚举类型的数值，可叠加"
+        },
+        "ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uint64"
+          },
+          "title": "资源id列表"
+        },
+        "names": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "资源名称列表"
+        },
+        "page_request": {
+          "$ref": "#/definitions/keystoneosscommonListPage",
+          "title": "list请求对应的翻页：offset, limit"
+        }
+      }
+    },
+    "cmdbListResourceResponse": {
+      "type": "object",
+      "properties": {
+        "page_response": {
+          "$ref": "#/definitions/keystoneosscommonListPage",
+          "title": "list返回对应的翻页：offset, total"
+        },
+        "resource_list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/cmdbResource"
+          },
+          "title": "返回的订单列表"
+        }
+      }
+    },
+    "cmdbNewResourceRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/cmdbResourceType"
+        },
+        "nick_name": {
+          "type": "string"
+        },
+        "attributes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResourceAttribute"
+          }
+        },
+        "relations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResourceRelationShip"
+          }
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "cmdbNewResourceResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
+    },
+    "cmdbOrderWaterLevelLockRequest": {
+      "type": "object",
+      "properties": {
+        "ticket": {
+          "$ref": "#/definitions/commonTicket"
+        }
+      }
+    },
+    "cmdbOrderWaterLevelLockResponse": {
+      "type": "object"
+    },
+    "cmdbProductWaterLevelQuery": {
+      "type": "object",
+      "properties": {
+        "product_level_type": {
+          "$ref": "#/definitions/cmdbProductWaterLevelType",
+          "title": "是通过SQB还是通过订单来计算"
+        },
+        "kss_id": {
+          "type": "string",
+          "title": "商品资源所对应的kss_id, 从 ATTRIBUTE_KEY_KSS_ID tag 获取"
+        },
+        "product_resource_id": {
+          "type": "string",
+          "format": "uint64",
+          "title": "商品资源本身的id, 当有该参数时，忽略上面的参数"
+        }
+      }
+    },
+    "cmdbProductWaterLevelType": {
+      "type": "string",
+      "enum": [
+        "ALLOCATED",
+        "PAID"
+      ],
+      "default": "ALLOCATED"
+    },
+    "cmdbResource": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/cmdbResourceType"
+        },
+        "nick_name": {
+          "type": "string"
+        },
+        "attributes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResourceAttribute"
+          }
+        },
+        "relations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResourceRelationShip"
+          }
+        },
+        "status": {
+          "$ref": "#/definitions/cmdbResourceStatus"
+        },
+        "description": {
+          "type": "string"
+        },
+        "used": {
+          "$ref": "#/definitions/ResourceUsed"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "title": "资源统一定义"
+    },
+    "cmdbResourceStatsResponse": {
+      "type": "object",
+      "properties": {
+        "status_stats": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "format": "int64"
+          }
+        }
+      }
+    },
+    "cmdbResourceStatus": {
+      "type": "string",
+      "enum": [
+        "STATUS_UNLIMIT",
+        "STATUS_PENDING",
+        "STATUS_OK",
+        "STATUS_MAINTAIN",
+        "STATUS_IMPAIRED"
+      ],
+      "default": "STATUS_UNLIMIT"
+    },
+    "cmdbResourceType": {
+      "type": "string",
+      "enum": [
+        "TYPE_UNLIMIT",
+        "TYPE_HOST",
+        "TYPE_VIRTUAL",
+        "TYPE_SERVICE",
+        "TYPE_PRODUCT"
+      ],
+      "default": "TYPE_UNLIMIT"
+    },
+    "cmdbRetryDeployRequest": {
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "type": "string",
+          "title": "请求的id"
+        }
+      },
+      "title": "重试发布(upgrade), 只能针对已经失败的重试"
+    },
+    "cmdbRetryDeployResponse": {
+      "type": "object"
+    },
+    "cmdbServiceWaterLevelQuery": {
+      "type": "object",
+      "properties": {
+        "service_type": {
+          "type": "string",
+          "title": "数据从ATTRIBUTE_KEY_SERVICE_TYPE tag 接口获取"
+        },
+        "service_resource_id": {
+          "type": "string",
+          "format": "uint64",
+          "title": "业务资源本身的id, 当有该参数时，忽略上面的参数"
+        },
+        "level_type": {
+          "$ref": "#/definitions/cmdbWaterLevelType",
+          "title": "资源水位类型"
+        },
+        "gpu_type": {
+          "type": "string",
+          "title": "只有当WaterLevelType为GPU时，需要填写gpu_type"
+        }
+      }
+    },
+    "cmdbSqbWaterLevelLockRequest": {
+      "type": "object",
+      "properties": {
+        "sqb": {
+          "$ref": "#/definitions/sqbsSqb",
+          "title": "sqb内容"
+        },
+        "op_type": {
+          "$ref": "#/definitions/keystoneosscommonOpType",
+          "title": "操作类型 new、update、delete"
+        }
+      }
+    },
+    "cmdbSqbWaterLevelLockResponse": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
+    },
+    "cmdbStringArray": {
+      "type": "object",
+      "properties": {
+        "array": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "cmdbTriggerProductCrdRequest": {
+      "type": "object",
+      "properties": {
+        "ticket": {
+          "$ref": "#/definitions/commonTicket"
+        }
+      }
+    },
+    "cmdbTriggerProductCrdResponse": {
+      "type": "object"
+    },
+    "cmdbUpdateResourceRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "nick_name": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/cmdbResourceStatus"
+        },
+        "description": {
+          "type": "string"
+        },
+        "attributes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResourceAttribute"
+          }
+        },
+        "relations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResourceRelationShip"
+          },
+          "title": "新增"
+        },
+        "del_attributes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResourceAttribute"
+          }
+        },
+        "del_relations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResourceRelationShip"
+          }
+        }
+      }
+    },
+    "cmdbUpdateResourceResponse": {
+      "type": "object"
+    },
+    "cmdbUsage": {
+      "type": "object",
+      "properties": {
+        "usage": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": "例如{\"P4\": 10}或者{\"CPU_TYPE_CPU\": 10}"
+        }
+      }
+    },
+    "cmdbVirtualWaterLevelQuery": {
+      "type": "object",
+      "properties": {
+        "virtual_resource_id": {
+          "type": "string",
+          "format": "uint64",
+          "title": "虚拟资源本身的id"
+        },
+        "level_type": {
+          "$ref": "#/definitions/cmdbWaterLevelType",
+          "title": "资源水位类型"
+        },
+        "gpu_type": {
+          "type": "string",
+          "title": "只有当WaterLevelType为GPU时，需要填写gpu_type"
+        }
+      }
+    },
+    "cmdbWaterLevel": {
+      "type": "object",
+      "properties": {
+        "total": {
+          "type": "string",
+          "format": "uint64",
+          "title": "总数"
+        },
+        "used": {
+          "type": "string",
+          "format": "uint64",
+          "title": "已使用量"
+        },
+        "unit": {
+          "type": "string",
+          "title": "单位"
+        },
+        "start_time": {
+          "type": "string",
+          "format": "date-time",
+          "title": "水位的统计时间点"
+        }
+      }
+    },
+    "cmdbWaterLevelType": {
+      "type": "string",
+      "enum": [
+        "UNLIMIT",
+        "TOTAL",
+        "CPU",
+        "GPU",
+        "DISK",
+        "MEMORY"
+      ],
+      "default": "UNLIMIT"
+    },
+    "commonGranularity": {
+      "type": "string",
+      "enum": [
+        "GRANULARITY_ALL",
+        "GRANULARITY_5MIN",
+        "GRANULARITY_DAY",
+        "GRANULARITY_MONTH"
+      ],
+      "default": "GRANULARITY_ALL",
+      "title": "- GRANULARITY_ALL: 仅用于查询\n - GRANULARITY_5MIN: 5分钟\n - GRANULARITY_DAY: 天\n - GRANULARITY_MONTH: 月"
+    },
+    "commonTicket": {
+      "type": "object",
+      "properties": {
+        "zone_id": {
+          "type": "integer",
+          "format": "int64",
+          "title": "区域id，部署在哪个zone"
+        },
+        "tenant_id": {
+          "type": "string",
+          "format": "uint64",
+          "title": "租户id，未来可能用到"
+        },
+        "app_id": {
+          "type": "string",
+          "title": "应用id(外部表现为string)"
+        },
+        "kss_instance_id": {
+          "type": "string",
+          "format": "uint64",
+          "title": "kss实例id (实例id+订单id+op_type是唯一的一条记录)"
+        },
+        "order_id": {
+          "type": "string",
+          "format": "uint64",
+          "title": "订单id"
+        },
+        "item_properties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TicketItemProperty"
+          },
+          "title": "各个item的property列表"
+        },
+        "count": {
+          "type": "integer",
+          "format": "int64",
+          "title": "服务数量"
+        },
+        "op_type": {
+          "$ref": "#/definitions/keystonebsscommonOpType",
+          "title": "操作类型"
+        },
+        "start_time": {
+          "type": "string",
+          "format": "date-time",
+          "title": "服务开始运行时间"
+        },
+        "end_time": {
+          "type": "string",
+          "format": "date-time",
+          "title": "服务开始截止时间"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "title": "工单产生时间"
+        },
+        "kss_id": {
+          "type": "string",
+          "format": "uint64",
+          "title": "kss id"
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "kss 层面的properties"
+        }
+      },
+      "title": "工单"
+    },
+    "commoncmdbDeployStatus": {
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/keystoneoss_agentDeployStatus",
+          "title": "status"
+        }
+      }
+    },
+    "keystonebsscommonOpType": {
+      "type": "string",
+      "enum": [
+        "OP_TYPE_UNKNOWN",
+        "OP_TYPE_CREATE",
+        "OP_TYPE_DELETE"
+      ],
+      "default": "OP_TYPE_UNKNOWN",
+      "description": "- OP_TYPE_UNKNOWN: 未知\n - OP_TYPE_CREATE: 创建\n - OP_TYPE_DELETE: 删除",
+      "title": "工单：资源操作类型"
+    },
+    "keystoneoss_agentDeployStatus": {
+      "type": "string",
+      "enum": [
+        "UnknownDeployStatus",
+        "Succeed",
+        "Failed",
+        "Processing"
+      ],
+      "default": "UnknownDeployStatus"
+    },
+    "keystoneosscommonListPage": {
+      "type": "object",
+      "properties": {
+        "offset": {
+          "type": "integer",
+          "format": "int32",
+          "description": "可选, 开始位置, 取值:\u003e=0, 0为第一条; 默认值为0.\n返回本次请求返回的第一条记录实际位置(一般与输入一致).\n[EN] Optional, start position, value: \u003e = 0, 0 is the first line; the\ndefault value is 0. In response, actual offset of the first returned record\nis returned (generally equals to the offset in request)."
+        },
+        "limit": {
+          "type": "integer",
+          "format": "int32",
+          "description": "长度, 取值范围[1,100], 如果超出范围, 则返回失败;\n在某些接口中limit范围可能会重新定义, 请以其接口的补充说明为准. [EN] Length,\ndefault value range [1,100], if it is out of the range, error will be\nreturned; as the limit range may be redefined in some APIs, please refer to\nthe supplementary description of these APIs."
+        },
+        "total": {
+          "type": "integer",
+          "format": "int32",
+          "description": "可选, 总数, 请求无须填此参数, 响应时填写.\n[EN] Optional, this parameter is not required for request, but will be\nfilled in response."
+        }
+      }
+    },
+    "keystoneosscommonOpType": {
+      "type": "string",
+      "enum": [
+        "OPTYPE_ALL",
+        "OPTYPE_NEW",
+        "OPTYPE_UPDATE",
+        "OPTYPE_DELETE"
+      ],
+      "default": "OPTYPE_ALL",
+      "description": "- OPTYPE_ALL: 仅用于查询\n - OPTYPE_NEW: 创建\n - OPTYPE_UPDATE: 更新\n - OPTYPE_DELETE: 删除",
+      "title": "通用操作类型"
+    },
+    "sqbsServiceMetricsType": {
+      "type": "string",
+      "enum": [
+        "SERVICE_METRICS_TYPE_UNKNOWN",
+        "SERVICE_METRICS_TYPE_COUNTER",
+        "SERVICE_METRICS_TYPE_GAUGE"
+      ],
+      "default": "SERVICE_METRICS_TYPE_UNKNOWN"
+    },
+    "sqbsSqb": {
+      "type": "object",
+      "properties": {
+        "sqb_id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "tenant_id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "region_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "zone_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "project_id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "label_type": {
+          "$ref": "#/definitions/SqbLabelType"
+        },
+        "label_obj_id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "total_budget": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "total_budget_left": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "service_list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/sqbsSqbServiceItem"
+          }
+        },
+        "status": {
+          "$ref": "#/definitions/sqbsSqbStatus"
+        },
+        "description": {
+          "type": "string"
+        },
+        "start_time": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end_time": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "title": "SQB详情"
+    },
+    "sqbsSqbServiceItem": {
+      "type": "object",
+      "properties": {
+        "service_type_id": {
+          "type": "string",
+          "format": "uint64",
+          "title": "对应商品逻辑的kss id"
+        },
+        "service_metrics_type": {
+          "$ref": "#/definitions/sqbsServiceMetricsType"
+        },
+        "quota": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "quota_left": {
+          "type": "integer",
+          "format": "int64",
+          "title": "current quota left"
+        },
+        "time_range_quota_left_list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceItemTimerangeQuotaLeft"
+          },
+          "title": "all time range quota left"
+        },
+        "budget": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "budget_left": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "start_time": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end_time": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "sqbsSqbStatus": {
+      "type": "string",
+      "enum": [
+        "STATUS_UNKNOWN",
+        "STATUS_ACTIVE",
+        "STATUS_DELETED"
+      ],
+      "default": "STATUS_UNKNOWN"
+    }
+  }
+}
