@@ -139,6 +139,94 @@
         ]
       }
     },
+    "/v1/resources/deploy-schema": {
+      "get": {
+        "operationId": "GetDeployResourceSchema",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/cmdbGetDeployResourceSchemaResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "type",
+            "description": "资源类型，目前只支持业务资源.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "TYPE_UNLIMIT",
+              "TYPE_HOST",
+              "TYPE_VIRTUAL",
+              "TYPE_SERVICE",
+              "TYPE_PRODUCT"
+            ],
+            "default": "TYPE_UNLIMIT"
+          },
+          {
+            "name": "resource_id",
+            "description": "资源id.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "CMDBService"
+        ]
+      }
+    },
+    "/v1/resources/deploy-versions": {
+      "get": {
+        "operationId": "GetDeployResourceVersions",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/cmdbGetDeployResourceVersionsResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "type",
+            "description": "资源类型，目前只支持业务资源.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "TYPE_UNLIMIT",
+              "TYPE_HOST",
+              "TYPE_VIRTUAL",
+              "TYPE_SERVICE",
+              "TYPE_PRODUCT"
+            ],
+            "default": "TYPE_UNLIMIT"
+          },
+          {
+            "name": "resource_id",
+            "description": "资源id.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          }
+        ],
+        "tags": [
+          "CMDBService"
+        ]
+      }
+    },
     "/v1/resources/deploy/retry": {
       "post": {
         "operationId": "RetryDeployResource",
@@ -188,6 +276,46 @@
             }
           },
           {
+            "name": "resource_ids",
+            "description": "请求的资源id列表.",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uint64"
+            }
+          },
+          {
+            "name": "mode",
+            "description": "部署类型.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "DEPLOY_MODE_UNKNOWN",
+              "DEPLOY_MODE_NEW",
+              "DEPLOY_MODE_UPGRADE"
+            ],
+            "default": "DEPLOY_MODE_UNKNOWN"
+          },
+          {
+            "name": "start_time",
+            "description": "deploy更新时间 x \u003e= start_time.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "end_time",
+            "description": "deploy更新时间 x \u003c end_time.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
             "name": "page_request.offset",
             "description": "可选, 开始位置, 取值:\u003e=0, 0为第一条; 默认值为0.\n返回本次请求返回的第一条记录实际位置(一般与输入一致).\n[EN] Optional, start position, value: \u003e = 0, 0 is the first line; the\ndefault value is 0. In response, actual offset of the first returned record\nis returned (generally equals to the offset in request).",
             "in": "query",
@@ -217,6 +345,30 @@
         ]
       }
     },
+    "/v1/resources/deploy/{request_id}": {
+      "get": {
+        "operationId": "GetDeployInfo",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/cmdbDeployInfo"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "request_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "CMDBService"
+        ]
+      }
+    },
     "/v1/resources/name/{name}": {
       "get": {
         "operationId": "GetResourceByName",
@@ -234,6 +386,31 @@
             "in": "path",
             "required": true,
             "type": "string"
+          }
+        ],
+        "tags": [
+          "CMDBService"
+        ]
+      }
+    },
+    "/v1/resources/order/{order_id}": {
+      "get": {
+        "operationId": "GetServiceTagByOrderId",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/cmdbGetServiceTagByOrderIdResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "order_id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
           }
         ],
         "tags": [
@@ -769,6 +946,46 @@
     "cmdbDeleteResourceResponse": {
       "type": "object"
     },
+    "cmdbDeployInfo": {
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "type": "string",
+          "title": "请求id"
+        },
+        "resource_id": {
+          "type": "string",
+          "format": "uint64",
+          "title": "资源id"
+        },
+        "mode": {
+          "$ref": "#/definitions/cmdbDeployMode",
+          "title": "部署类型"
+        },
+        "version": {
+          "type": "string",
+          "title": "配置的版本号"
+        },
+        "values": {
+          "type": "string",
+          "title": "部署的参数, 填好值的yaml文件内容"
+        },
+        "status": {
+          "$ref": "#/definitions/keystoneoss_agentDeployStatus",
+          "title": "status"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "title": "创建时间"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "title": "修改时间"
+        }
+      }
+    },
     "cmdbDeployMode": {
       "type": "string",
       "enum": [
@@ -793,6 +1010,10 @@
         "mode": {
           "$ref": "#/definitions/cmdbDeployMode",
           "title": "部署类型"
+        },
+        "version": {
+          "type": "string",
+          "title": "配置的版本号"
         },
         "values": {
           "type": "string",
@@ -821,6 +1042,26 @@
           "items": {
             "type": "number",
             "format": "float"
+          }
+        }
+      }
+    },
+    "cmdbGetDeployResourceSchemaResponse": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "type": "string",
+          "title": "部署业务资源所需schema"
+        }
+      }
+    },
+    "cmdbGetDeployResourceVersionsResponse": {
+      "type": "object",
+      "properties": {
+        "versions": {
+          "type": "array",
+          "items": {
+            "type": "string"
           }
         }
       }
@@ -867,6 +1108,15 @@
       "properties": {
         "resource": {
           "$ref": "#/definitions/cmdbResource"
+        }
+      }
+    },
+    "cmdbGetServiceTagByOrderIdResponse": {
+      "type": "object",
+      "properties": {
+        "tag": {
+          "type": "string",
+          "title": "service resource tag"
         }
       }
     },
@@ -1427,7 +1677,13 @@
       "type": "object",
       "properties": {
         "request_id": {
-          "type": "string"
+          "type": "string",
+          "title": "请求id"
+        },
+        "resource_id": {
+          "type": "string",
+          "format": "uint64",
+          "title": "资源id"
         },
         "status": {
           "$ref": "#/definitions/keystoneoss_agentDeployStatus",
