@@ -139,94 +139,6 @@
         ]
       }
     },
-    "/v1/resources/deploy-schema": {
-      "get": {
-        "operationId": "GetDeployResourceSchema",
-        "responses": {
-          "200": {
-            "description": "",
-            "schema": {
-              "$ref": "#/definitions/cmdbGetDeployResourceSchemaResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "type",
-            "description": "资源类型，目前只支持业务资源.",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "enum": [
-              "TYPE_UNLIMIT",
-              "TYPE_HOST",
-              "TYPE_VIRTUAL",
-              "TYPE_SERVICE",
-              "TYPE_PRODUCT"
-            ],
-            "default": "TYPE_UNLIMIT"
-          },
-          {
-            "name": "resource_id",
-            "description": "资源id.",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "uint64"
-          },
-          {
-            "name": "version",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "CMDBService"
-        ]
-      }
-    },
-    "/v1/resources/deploy-versions": {
-      "get": {
-        "operationId": "GetDeployResourceVersions",
-        "responses": {
-          "200": {
-            "description": "",
-            "schema": {
-              "$ref": "#/definitions/cmdbGetDeployResourceVersionsResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "type",
-            "description": "资源类型，目前只支持业务资源.",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "enum": [
-              "TYPE_UNLIMIT",
-              "TYPE_HOST",
-              "TYPE_VIRTUAL",
-              "TYPE_SERVICE",
-              "TYPE_PRODUCT"
-            ],
-            "default": "TYPE_UNLIMIT"
-          },
-          {
-            "name": "resource_id",
-            "description": "资源id.",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "uint64"
-          }
-        ],
-        "tags": [
-          "CMDBService"
-        ]
-      }
-    },
     "/v1/resources/deploy/retry": {
       "post": {
         "operationId": "RetryDeployResource",
@@ -288,16 +200,27 @@
           },
           {
             "name": "mode",
-            "description": "部署类型.",
+            "description": "部署类型, DeployMode 枚举类型的数值，可叠加.",
             "in": "query",
             "required": false,
-            "type": "string",
-            "enum": [
-              "DEPLOY_MODE_UNKNOWN",
-              "DEPLOY_MODE_NEW",
-              "DEPLOY_MODE_UPGRADE"
-            ],
-            "default": "DEPLOY_MODE_UNKNOWN"
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "type",
+            "description": "资源类型，Resource.Type 枚举类型的数值，可叠加.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "status",
+            "description": "status, oss_agent.DeployStatus 枚举类型的数值，可叠加.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
           },
           {
             "name": "start_time",
@@ -345,6 +268,38 @@
         ]
       }
     },
+    "/v1/resources/deploy/status/stats": {
+      "get": {
+        "operationId": "StatsDeploy",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/cmdbDeployStatusStatsResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "TYPE_UNLIMIT",
+              "TYPE_HOST",
+              "TYPE_VIRTUAL",
+              "TYPE_SERVICE",
+              "TYPE_PRODUCT"
+            ],
+            "default": "TYPE_UNLIMIT"
+          }
+        ],
+        "tags": [
+          "CMDBService"
+        ]
+      }
+    },
     "/v1/resources/deploy/{request_id}": {
       "get": {
         "operationId": "GetDeployInfo",
@@ -362,6 +317,138 @@
             "in": "path",
             "required": true,
             "type": "string"
+          }
+        ],
+        "tags": [
+          "CMDBService"
+        ]
+      },
+      "delete": {
+        "operationId": "CancelDeployResource",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/cmdbCancelDeployResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "request_id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "CMDBService"
+        ]
+      }
+    },
+    "/v1/resources/label": {
+      "get": {
+        "operationId": "GetServiceLabel",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/cmdbGetServiceLabelResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "ticket.zone_id",
+            "description": "区域id，部署在哪个zone.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "ticket.tenant_id",
+            "description": "租户id，未来可能用到.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "ticket.app_id",
+            "description": "应用id(外部表现为string).",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "ticket.kss_instance_id",
+            "description": "kss实例id (实例id+订单id+op_type是唯一的一条记录).",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "ticket.order_id",
+            "description": "订单id.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "ticket.count",
+            "description": "服务数量.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "ticket.op_type",
+            "description": "操作类型.\n\n - OP_TYPE_UNKNOWN: 未知\n - OP_TYPE_CREATE: 创建\n - OP_TYPE_DELETE: 删除",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "OP_TYPE_UNKNOWN",
+              "OP_TYPE_CREATE",
+              "OP_TYPE_DELETE"
+            ],
+            "default": "OP_TYPE_UNKNOWN"
+          },
+          {
+            "name": "ticket.start_time",
+            "description": "服务开始运行时间.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "ticket.end_time",
+            "description": "服务开始截止时间.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "ticket.created_at",
+            "description": "工单产生时间.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "ticket.kss_id",
+            "description": "kss id.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "uint64"
           }
         ],
         "tags": [
@@ -386,31 +473,6 @@
             "in": "path",
             "required": true,
             "type": "string"
-          }
-        ],
-        "tags": [
-          "CMDBService"
-        ]
-      }
-    },
-    "/v1/resources/order/{order_id}": {
-      "get": {
-        "operationId": "GetServiceTagByOrderId",
-        "responses": {
-          "200": {
-            "description": "",
-            "schema": {
-              "$ref": "#/definitions/cmdbGetServiceTagByOrderIdResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "order_id",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "uint64"
           }
         ],
         "tags": [
@@ -514,8 +576,36 @@
         ]
       }
     },
+    "/v1/resources/product/crd/create": {
+      "post": {
+        "summary": "deploy create productCrd",
+        "operationId": "CreateProductCrd",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/cmdbCreateProductCrdResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/cmdbCreateProductCrdRequest"
+            }
+          }
+        ],
+        "tags": [
+          "CMDBService"
+        ]
+      }
+    },
     "/v1/resources/product/crd/trigger": {
       "post": {
+        "summary": "ticket trigger productCrd",
         "operationId": "TriggerProductCrd",
         "responses": {
           "200": {
@@ -744,6 +834,92 @@
           "CMDBService"
         ]
       }
+    },
+    "/v1/resources/{resource_id}/deploy/schema": {
+      "get": {
+        "operationId": "GetDeployResourceSchema",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/cmdbGetDeployResourceSchemaResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "resource_id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "type",
+            "description": "资源类型，目前只支持业务资源.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "TYPE_UNLIMIT",
+              "TYPE_HOST",
+              "TYPE_VIRTUAL",
+              "TYPE_SERVICE",
+              "TYPE_PRODUCT"
+            ],
+            "default": "TYPE_UNLIMIT"
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "CMDBService"
+        ]
+      }
+    },
+    "/v1/resources/{resource_id}/deploy/versions": {
+      "get": {
+        "operationId": "GetDeployResourceVersions",
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/cmdbGetDeployResourceVersionsResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "resource_id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
+          },
+          {
+            "name": "type",
+            "description": "资源类型，目前只支持业务资源.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "TYPE_UNLIMIT",
+              "TYPE_HOST",
+              "TYPE_VIRTUAL",
+              "TYPE_SERVICE",
+              "TYPE_PRODUCT"
+            ],
+            "default": "TYPE_UNLIMIT"
+          }
+        ],
+        "tags": [
+          "CMDBService"
+        ]
+      }
     }
   },
   "definitions": {
@@ -844,6 +1020,13 @@
             "type": "string"
           },
           "title": "服务实例的属性,比如db_id,object_type\n其他如class1，class2，以及规格等都放到properties里面"
+        },
+        "specs": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "新增spec字段，与properties进行区分"
         }
       }
     },
@@ -918,6 +1101,9 @@
         }
       }
     },
+    "cmdbCancelDeployResponse": {
+      "type": "object"
+    },
     "cmdbConsumerTimeRange": {
       "type": "object",
       "properties": {
@@ -942,6 +1128,21 @@
           "title": "结束时间"
         }
       }
+    },
+    "cmdbCreateProductCrdRequest": {
+      "type": "object",
+      "properties": {
+        "resource_id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "ips_resource": {
+          "$ref": "#/definitions/oss_agentIPSResource"
+        }
+      }
+    },
+    "cmdbCreateProductCrdResponse": {
+      "type": "object"
     },
     "cmdbDeleteResourceResponse": {
       "type": "object"
@@ -973,6 +1174,11 @@
         "status": {
           "$ref": "#/definitions/keystoneoss_agentDeployStatus",
           "title": "status"
+        },
+        "revision": {
+          "type": "string",
+          "format": "int64",
+          "title": "revision"
         },
         "created_at": {
           "type": "string",
@@ -1031,6 +1237,18 @@
         "request_id": {
           "type": "string",
           "title": "如果请求里带有这个, 就返回请求的id\n如果请求里没有，就返回一个唯一id"
+        }
+      }
+    },
+    "cmdbDeployStatusStatsResponse": {
+      "type": "object",
+      "properties": {
+        "status_stats": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "format": "int64"
+          }
         }
       }
     },
@@ -1111,12 +1329,15 @@
         }
       }
     },
-    "cmdbGetServiceTagByOrderIdResponse": {
+    "cmdbGetServiceLabelResponse": {
       "type": "object",
       "properties": {
-        "tag": {
-          "type": "string",
-          "title": "service resource tag"
+        "label": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "service resource label"
         }
       }
     },
@@ -1743,6 +1964,46 @@
       "default": "OPTYPE_ALL",
       "description": "- OPTYPE_ALL: 仅用于查询\n - OPTYPE_NEW: 创建\n - OPTYPE_UPDATE: 更新\n - OPTYPE_DELETE: 删除",
       "title": "通用操作类型"
+    },
+    "oss_agentIPSResource": {
+      "type": "object",
+      "properties": {
+        "ips_type": {
+          "$ref": "#/definitions/oss_agentIPSType",
+          "title": "任务类型"
+        },
+        "feature_type_version": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": "特征类型版本，{\"OBJECT_PEDESTRIAN\": 10405}"
+        },
+        "gpu_num": {
+          "type": "integer",
+          "format": "int32",
+          "title": "gpu使用个数上限"
+        },
+        "gpu_type": {
+          "type": "string",
+          "title": "gpu类型, p4,t4"
+        }
+      },
+      "title": "图片流处理资源"
+    },
+    "oss_agentIPSType": {
+      "type": "string",
+      "enum": [
+        "UnknownIPSType",
+        "Face",
+        "Pach",
+        "FacePach",
+        "OCR_Certificate",
+        "OCR_Business",
+        "OCR_General"
+      ],
+      "default": "UnknownIPSType"
     },
     "sqbsServiceMetricsType": {
       "type": "string",
