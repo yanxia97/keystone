@@ -999,13 +999,6 @@
             "type": "string"
           },
           "title": "服务实例的属性,比如db_id,object_type\n其他如class1，class2，以及规格等都放到properties里面"
-        },
-        "specs": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "title": "新增spec字段，与properties进行区分"
         }
       }
     },
@@ -1210,6 +1203,10 @@
           "type": "string",
           "format": "int64",
           "title": "revision"
+        },
+        "result": {
+          "type": "string",
+          "title": "result"
         },
         "created_at": {
           "type": "string",
@@ -2042,6 +2039,10 @@
         "status": {
           "$ref": "#/definitions/keystoneoss_agentDeployStatus",
           "title": "status"
+        },
+        "result": {
+          "type": "string",
+          "title": "result"
         }
       }
     },
