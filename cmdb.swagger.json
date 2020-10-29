@@ -797,6 +797,18 @@
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "schema_type",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "UnknownSchemaContextType",
+              "Simple",
+              "Advanced"
+            ],
+            "default": "UnknownSchemaContextType"
           }
         ],
         "tags": [
@@ -999,13 +1011,6 @@
             "type": "string"
           },
           "title": "服务实例的属性,比如db_id,object_type\n其他如class1，class2，以及规格等都放到properties里面"
-        },
-        "specs": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          },
-          "title": "新增spec字段，与properties进行区分"
         }
       }
     },
@@ -2168,6 +2173,15 @@
         "OCR_General"
       ],
       "default": "UnknownIPSType"
+    },
+    "oss_agentSchemaContextType": {
+      "type": "string",
+      "enum": [
+        "UnknownSchemaContextType",
+        "Simple",
+        "Advanced"
+      ],
+      "default": "UnknownSchemaContextType"
     },
     "sqbsServiceMetricsType": {
       "type": "string",
