@@ -14,7 +14,7 @@
   "produces": [
     "application/json"
   ],
-  "basePath":"/proxy/keystone-operations-cmdb-service",
+  "basePath": "/proxy/keystone-operations-cmdb-service",
   "paths": {
     "/v1/resources/_search": {
       "post": {
